@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스피드 퀴즈!</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 입구 화면 -->
+        <div id="entry-screen" class="screen active">
+            <div class="floating-decorations">
+                <span class="float-item" style="left: 5%; animation-delay: 0s;">🎈</span>
+                <span class="float-item" style="left: 15%; animation-delay: 0.5s;">🎪</span>
+                <span class="float-item" style="left: 75%; animation-delay: 1s;">🎨</span>
+                <span class="float-item" style="left: 85%; animation-delay: 1.5s;">🌈</span>
+            </div>
+            <div class="logo-container">
+                <div class="logo-mascot">🦁</div>
+                <h1 class="logo">스피드 퀴즈!</h1>
+                <div class="stars">
+                    <span class="star">⭐</span>
+                    <span class="star">🌟</span>
+                    <span class="star">⭐</span>
+                </div>
+                <div class="sub-mascots">
+                    <span>🐰</span>
+                    <span>🐻</span>
+                    <span>🐼</span>
+                </div>
+            </div>
+
+            <button class="start-btn big-start-btn" onclick="startIntroduction()">
+                <span>🎬 시작! 🎬</span>
+            </button>
+        </div>
+
+        <!-- 참가자 소개 화면 -->
+        <div id="intro-screen" class="screen">
+            <div class="intro-decorations">
+                <span>🎉</span><span>✨</span><span>🎉</span>
+            </div>
+            <h2 class="screen-title">참가자 소개! 🌟</h2>
+
+            <div class="intro-container">
+                <div class="intro-progress">
+                    <span id="intro-current">1</span> / <span id="intro-total">5</span>
+                </div>
+                <div class="intro-card" id="intro-card">
+                    <img id="intro-photo" class="intro-photo" src="" alt="">
+                    <div id="intro-name" class="intro-name">???</div>
+                </div>
+            </div>
+
+            <button class="start-btn" onclick="nextIntroduction()">
+                <span id="intro-btn-text">다음 참가자!</span>
+                <span class="start-icon">👋</span>
+            </button>
+        </div>
+
+        <!-- 메인 허브 화면 -->
+        <div id="main-hub-screen" class="screen">
+            <div class="hub-header">
+                <div class="hub-decorations">
+                    <span class="deco">🎈</span>
+                    <span class="deco">🎉</span>
+                    <span class="deco">⭐</span>
+                </div>
+                <h2 class="hub-title">퀴즈 게임 🎮</h2>
+            </div>
+
+            <!-- 총점수판 -->
+            <div class="scoreboard total-scoreboard">
+                <div class="scoreboard-header">
+                    <span>🏆 총점수</span>
+                    <button class="small-reset-btn" onclick="resetTotalScores()">초기화</button>
+                </div>
+                <div id="total-scoreboard-list" class="scoreboard-list">
+                </div>
+                <div class="score-edit-hint">💡 점수를 터치하면 수정할 수 있어요!</div>
+            </div>
+
+            <!-- 게임 선택 메뉴 -->
+            <div class="game-menu">
+                <button class="game-menu-btn speed-quiz-btn" onclick="showSpeedQuizSetup()">
+                    <span class="menu-icon">🗣️</span>
+                    <span class="menu-title">스피드 퀴즈</span>
+                    <span class="menu-desc">말로 설명해요!</span>
+                </button>
+                <button class="game-menu-btn catchmind-btn" onclick="showCatchmindSetup()">
+                    <span class="menu-icon">🎨</span>
+                    <span class="menu-title">그림 연상퀴즈</span>
+                    <span class="menu-desc">그림보고 맞춰요!</span>
+                </button>
+                <button class="game-menu-btn photo-btn" onclick="showPhotoQuizSetup()">
+                    <span class="menu-icon">📸</span>
+                    <span class="menu-title">사진 퀴즈</span>
+                    <span class="menu-desc">사진보고 맞춰요!</span>
+                </button>
+                <button class="game-menu-btn song-btn" onclick="showSongQuizSetup()">
+                    <span class="menu-icon">🎵</span>
+                    <span class="menu-title">노래 퀴즈</span>
+                    <span class="menu-desc">듣고 맞춰요!</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 스피드 퀴즈 설정 화면 -->
+        <div id="speed-setup-screen" class="screen">
+            <button class="back-btn" onclick="goToMainHub()">← 뒤로</button>
+            <h2 class="screen-title">스피드 퀴즈 🗣️</h2>
+
+            <div class="setup-form">
+                <div class="form-group">
+                    <label>라운드당 시간 (초)</label>
+                    <div class="timer-options">
+                        <button class="timer-btn" onclick="setSpeedTimer(30)">30초</button>
+                        <button class="timer-btn active" onclick="setSpeedTimer(60)">60초</button>
+                        <button class="timer-btn" onclick="setSpeedTimer(90)">90초</button>
+                    </div>
+                </div>
+
+                <button class="start-btn" onclick="startSpeedQuizTeamDraw()">
+                    <span>조추첨 시작!</span>
+                    <span class="start-icon">🎲</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 조추첨 화면 -->
+        <div id="team-draw-screen" class="screen">
+            <div class="reveal-top-deco">
+                <span>🎪</span><span>🎭</span><span>🎪</span>
+            </div>
+            <h2 class="screen-title">조 추첨! 🎉</h2>
+
+            <div class="reveal-container">
+                <div class="reveal-number">
+                    <span id="reveal-team-number">1</span>조
+                </div>
+                <div class="reveal-card" id="reveal-card">
+                    <div class="reveal-role">문제 내는 사람</div>
+                    <div class="reveal-name" id="reveal-presenter">???</div>
+                    <div class="reveal-arrow">⬇️</div>
+                    <div class="reveal-role">맞추는 사람</div>
+                    <div class="reveal-name" id="reveal-guesser">???</div>
+                </div>
+            </div>
+
+            <div class="reveal-progress">
+                <span id="reveal-current">1</span> / <span id="reveal-total">5</span>
+            </div>
+
+            <button class="start-btn" onclick="revealNextTeam()">
+                <span id="reveal-btn-text">다음 조 공개!</span>
+                <span class="start-icon">👀</span>
+            </button>
+        </div>
+
+        <!-- 스피드 퀴즈 게임 허브 -->
+        <div id="speed-hub-screen" class="screen">
+            <button class="back-btn" onclick="endSpeedQuizSession()">← 종료</button>
+            <div class="hub-header">
+                <h2 class="hub-title">스피드 퀴즈 진행 🎮</h2>
+            </div>
+
+            <!-- 이번 세션 점수판 -->
+            <div class="scoreboard compact">
+                <div class="scoreboard-header">
+                    <span>📊 이번 세션 점수</span>
+                </div>
+                <div id="session-scoreboard-list" class="scoreboard-list">
+                </div>
+            </div>
+
+            <!-- 전체 조 목록 -->
+            <div class="teams-overview">
+                <div class="teams-header">
+                    <span>👥 전체 조 편성</span>
+                </div>
+                <div id="speed-teams-list" class="hub-teams-list">
+                </div>
+            </div>
+
+            <!-- 현재 진행할 조 -->
+            <div class="current-team-section">
+                <div class="current-team-label">🎬 현재 차례</div>
+                <div class="current-team-display">
+                    <span id="speed-team-number">1</span>조:
+                    <span id="speed-presenter">-</span> → <span id="speed-guesser">-</span>
+                </div>
+                <div class="team-nav-buttons">
+                    <button class="nav-btn" onclick="prevSpeedTeam()">◀</button>
+                    <button class="nav-btn" onclick="nextSpeedTeam()">▶</button>
+                </div>
+            </div>
+
+            <button class="start-btn game-start-btn" onclick="startSpeedRound()">
+                <span>🎯 게임 시작!</span>
+                <span class="start-icon">🚀</span>
+            </button>
+        </div>
+
+        <!-- 스피드 퀴즈 게임 화면 -->
+        <div id="speed-game-screen" class="screen">
+            <div class="game-top-bar">
+                <button class="exit-btn" onclick="showExitConfirm()">✕ 나가기</button>
+            </div>
+
+            <!-- 문제 타입 표시 -->
+            <div id="question-type-indicator" class="question-type-indicator">
+                <div id="speed-mode-indicator" class="speed-mode-box" style="display: none;">
+                    <div class="mode-icon">🎯🗣️</div>
+                    <div class="mode-text">말로 설명하세요!</div>
+                    <div class="mode-points" id="speed-mode-points">10점</div>
+                </div>
+                <div id="body-mode-indicator" class="body-mode-box" style="display: none;">
+                    <div class="mode-icon">🙊🚫🗣️</div>
+                    <div class="mode-text">말하지 마세요!</div>
+                    <div class="mode-sub">몸동작으로만! 🤸💃</div>
+                    <div class="mode-category" id="body-mode-category">[ 행동 ]</div>
+                    <div class="mode-points" id="body-mode-points">20점</div>
+                </div>
+            </div>
+
+            <!-- 현재 조 표시 -->
+            <div id="team-info-bar" class="team-info-bar">
+                <span id="game-team-number">1</span>조:
+                <span id="game-presenter">-</span> → <span id="game-guesser">-</span>
+            </div>
+
+            <div class="game-header">
+                <div class="timer-display">
+                    <div class="timer-circle">
+                        <span id="timer">60</span>
+                    </div>
+                </div>
+                <div class="score-display">
+                    <span class="score-label">점수</span>
+                    <span id="score">0</span>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div id="question-card" class="question-card">
+                    <div id="question-text" class="question-text">문제가 여기에!</div>
+                </div>
+                <div id="penalty-overlay" class="penalty-overlay">
+                    <div class="penalty-text">패스!</div>
+                    <div class="penalty-countdown" id="penalty-countdown">3</div>
+                </div>
+            </div>
+
+            <div class="game-buttons">
+                <button class="game-btn wrong-btn" onclick="markWrong()" id="pass-btn">
+                    <span class="btn-icon">❌</span>
+                    <span>패스</span>
+                </button>
+                <button class="game-btn correct-btn" onclick="markCorrect()" id="correct-btn">
+                    <span class="btn-icon">⭕</span>
+                    <span>정답!</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 라운드 결과 화면 -->
+        <div id="round-result-screen" class="screen">
+            <div class="result-decorations">
+                <span class="result-deco">🌟</span>
+                <span class="result-deco">✨</span>
+                <span class="result-deco">🌟</span>
+            </div>
+            <div class="result-container">
+                <h2 class="result-title">라운드 결과! 🎉</h2>
+                <div class="round-team-info">
+                    <span id="round-team-number">1</span>조
+                </div>
+                <div class="round-players">
+                    <span id="round-presenter">-</span> & <span id="round-guesser">-</span>
+                </div>
+                <div class="result-score">
+                    <div class="score-big" id="round-score">0</div>
+                    <div class="score-label-big">점 획득!</div>
+                </div>
+                <div class="result-stats">
+                    <div class="stat correct-stat">
+                        <span class="stat-icon">⭕</span>
+                        <span id="round-correct">0</span>개 정답
+                    </div>
+                    <div class="stat wrong-stat">
+                        <span class="stat-icon">❌</span>
+                        <span id="round-wrong">0</span>개 패스
+                    </div>
+                </div>
+                <button class="start-btn" onclick="backToSpeedHub()">
+                    <span>계속하기</span>
+                    <span class="start-icon">▶️</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 스피드 퀴즈 세션 결과 화면 -->
+        <div id="session-result-screen" class="screen">
+            <div class="result-decorations">
+                <span class="result-deco">🎊</span>
+                <span class="result-deco">🏆</span>
+                <span class="result-deco">🎊</span>
+            </div>
+            <div class="result-container">
+                <h2 class="result-title">세션 종료! 🎉</h2>
+                <div class="session-rankings" id="session-rankings">
+                </div>
+                <button class="start-btn" onclick="goToMainHub()">
+                    <span>메인으로</span>
+                    <span class="start-icon">🏠</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 그림 연상 퀴즈 설정 -->
+        <div id="catchmind-setup-screen" class="screen">
+            <button class="back-btn" onclick="goToMainHub()">← 뒤로</button>
+            <h2 class="screen-title">그림 연상퀴즈 🎨</h2>
+
+            <div class="setup-form">
+                <div class="form-group">
+                    <label>문제 수</label>
+                    <div class="count-selector">
+                        <button class="count-btn" onclick="changeCatchmindCount(-1)">-</button>
+                        <span id="catchmind-count">10</span>
+                        <button class="count-btn" onclick="changeCatchmindCount(1)">+</button>
+                    </div>
+                </div>
+
+                <button class="start-btn" onclick="startCatchmind()">
+                    <span>게임 시작!</span>
+                    <span class="start-icon">🎨</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 그림 연상 퀴즈 게임 화면 -->
+        <div id="catchmind-game-screen" class="screen">
+            <div class="game-top-bar">
+                <button class="exit-btn" onclick="endCatchmind()">✕ 종료</button>
+            </div>
+
+            <div class="catchmind-header">
+                <div class="catchmind-progress">
+                    문제 <span id="catchmind-current">1</span> / <span id="catchmind-total">10</span>
+                </div>
+                <div id="catchmind-points" class="quiz-points">10점</div>
+            </div>
+
+            <div id="catchmind-image-container" class="catchmind-image-container">
+                <img id="catchmind-image" class="catchmind-image" src="" alt="퀴즈 이미지">
+            </div>
+
+            <div class="catchmind-buttons" id="catchmind-buttons">
+                <!-- 참가자 버튼들이 여기에 동적으로 생성됨 -->
+            </div>
+
+            <button class="pass-large-btn" onclick="passCatchmind()">
+                <span>패스 ➡️</span>
+            </button>
+        </div>
+
+        <!-- 사진 퀴즈 설정 -->
+        <div id="photo-setup-screen" class="screen">
+            <button class="back-btn" onclick="goToMainHub()">← 뒤로</button>
+            <h2 class="screen-title">사진 퀴즈 📸</h2>
+
+            <div class="setup-form">
+                <div class="photo-quiz-info">
+                    <div class="info-icon">📷</div>
+                    <div class="info-text">
+                        <p>3장의 사진이 1세트!</p>
+                        <p>힌트1(어려움) → 힌트2 → 힌트3(쉬움)</p>
+                        <p>빨리 맞출수록 높은 점수!</p>
+                    </div>
+                    <div class="points-info">
+                        <span class="point-badge p30">힌트1: 30점</span>
+                        <span class="point-badge p20">힌트2: 20점</span>
+                        <span class="point-badge p10">힌트3: 10점</span>
+                    </div>
+                </div>
+
+                <button class="start-btn" onclick="startPhotoQuiz()">
+                    <span>게임 시작!</span>
+                    <span class="start-icon">📸</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 사진 퀴즈 게임 화면 -->
+        <div id="photo-game-screen" class="screen">
+            <div class="game-top-bar">
+                <button class="exit-btn" onclick="endPhotoQuiz()">✕ 종료</button>
+            </div>
+
+            <div class="catchmind-header">
+                <div class="catchmind-progress">
+                    문제 <span id="photo-current">1</span> / <span id="photo-total">10</span>
+                </div>
+                <div class="hint-level-display">
+                    힌트 <span id="photo-hint-level">1</span> / 3
+                </div>
+                <div id="photo-points" class="quiz-points">30점</div>
+            </div>
+
+            <div id="photo-image-container" class="catchmind-image-container">
+                <img id="photo-image" class="catchmind-image" src="" alt="퀴즈 사진">
+            </div>
+
+            <div class="catchmind-buttons" id="photo-buttons">
+                <!-- 참가자 버튼들이 여기에 동적으로 생성됨 -->
+            </div>
+
+            <div class="catchmind-bottom-buttons">
+                <button id="photo-next-hint-btn" class="hint-btn" onclick="nextPhotoHint()">
+                    <span>💡 다음 힌트</span>
+                    <span class="hint-penalty">(-10점)</span>
+                </button>
+                <button class="pass-large-btn" onclick="passPhotoQuiz()">
+                    <span>패스 ➡️</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 사진 퀴즈 문제 결과 화면 -->
+        <div id="photo-question-result-screen" class="screen">
+            <div class="question-result-container">
+                <h2 id="photo-result-title" class="question-result-title">정답! 🎉</h2>
+
+                <div class="result-grid-2x2">
+                    <div class="grid-item hint-grid">
+                        <div class="grid-label">힌트 1</div>
+                        <img id="photo-result-img1" src="" alt="힌트1">
+                    </div>
+                    <div class="grid-item hint-grid">
+                        <div class="grid-label">힌트 2</div>
+                        <img id="photo-result-img2" src="" alt="힌트2">
+                    </div>
+                    <div class="grid-item hint-grid">
+                        <div class="grid-label">힌트 3</div>
+                        <img id="photo-result-img3" src="" alt="힌트3">
+                    </div>
+                    <div id="photo-result-winner" class="grid-item winner-grid">
+                        <div class="grid-label">정답자</div>
+                        <img id="photo-winner-photo" class="winner-grid-photo" src="" alt="">
+                        <div id="photo-winner-name" class="winner-grid-name">홍길동</div>
+                        <div id="photo-result-points" class="winner-grid-points">+30점!</div>
+                    </div>
+                </div>
+
+                <button class="start-btn" onclick="continuePhotoQuiz()">
+                    <span>다음 문제</span>
+                    <span class="start-icon">▶️</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 노래 퀴즈 설정 -->
+        <div id="song-setup-screen" class="screen">
+            <button class="back-btn" onclick="goToMainHub()">← 뒤로</button>
+            <h2 class="screen-title">노래 퀴즈 🎵</h2>
+
+            <div class="setup-form">
+                <div class="photo-quiz-info">
+                    <div class="info-icon">🎧</div>
+                    <div class="info-text">
+                        <p>노래를 듣고 제목을 맞춰요!</p>
+                        <p>빨리 맞출수록 높은 점수!</p>
+                    </div>
+                    <div class="points-info">
+                        <span class="point-badge p30">0~50초: 30점</span>
+                        <span class="point-badge p20">50~100초: 20점</span>
+                        <span class="point-badge p10">100초~: 10점</span>
+                    </div>
+                </div>
+
+                <button class="start-btn" onclick="startSongQuiz()">
+                    <span>게임 시작!</span>
+                    <span class="start-icon">🎵</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 노래 퀴즈 게임 화면 -->
+        <div id="song-game-screen" class="screen">
+            <div class="game-top-bar">
+                <button class="exit-btn" onclick="endSongQuiz()">✕ 종료</button>
+            </div>
+
+            <div class="catchmind-header">
+                <div class="catchmind-progress">
+                    문제 <span id="song-current">1</span> / <span id="song-total">10</span>
+                </div>
+                <div id="song-points" class="quiz-points bonus-30">🔥 30점 🔥</div>
+            </div>
+
+            <!-- 음악 플레이어 -->
+            <div class="song-player-container">
+                <div class="song-player-box">
+                    <div class="music-visualizer">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                    <div class="song-timer">
+                        <span id="song-elapsed">0</span>초
+                    </div>
+                    <button id="song-play-btn" class="song-control-btn playing" onclick="toggleSongPlayback()">
+                        <span class="play-icon">⏸️</span>
+                        <span class="btn-text">일시정지</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="catchmind-buttons" id="song-buttons">
+                <!-- 참가자 버튼들이 여기에 동적으로 생성됨 -->
+            </div>
+
+            <button class="pass-large-btn" onclick="passSongQuiz()">
+                <span>패스 ➡️</span>
+            </button>
+        </div>
+
+        <!-- 노래 퀴즈 문제 결과 화면 -->
+        <div id="song-question-result-screen" class="screen">
+            <div class="question-result-container">
+                <h2 id="song-result-title" class="question-result-title">정답! 🎉</h2>
+
+                <div class="song-result-info">
+                    <div class="song-title-reveal">
+                        <div class="reveal-label">🎵 정답</div>
+                        <div id="song-answer" class="song-answer-text">노래 제목</div>
+                    </div>
+
+                    <div id="song-result-winner" class="song-winner-box">
+                        <img id="song-winner-photo" class="winner-photo-large" src="" alt="">
+                        <div id="song-winner-name" class="winner-name-large">홍길동</div>
+                        <div id="song-result-points" class="winner-points-large">+30점!</div>
+                        <div id="song-result-time" class="winner-time">12초만에 정답!</div>
+                    </div>
+                </div>
+
+                <button class="start-btn" onclick="continueSongQuiz()">
+                    <span>다음 문제</span>
+                    <span class="start-icon">▶️</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 퀴즈 결과 화면 (연상/사진 공용) -->
+        <div id="quiz-result-screen" class="screen">
+            <div class="result-decorations">
+                <span class="result-deco">🎊</span>
+                <span class="result-deco">🏆</span>
+                <span class="result-deco">🎊</span>
+            </div>
+            <div class="result-container">
+                <h2 class="result-title" id="quiz-result-title">퀴즈 종료! 🎉</h2>
+                <div class="session-rankings" id="quiz-rankings">
+                </div>
+                <button class="start-btn" onclick="goToMainHub()">
+                    <span>메인으로</span>
+                    <span class="start-icon">🏠</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 나가기 확인 모달 -->
+    <div id="exit-modal" class="modal">
+        <div class="modal-content">
+            <h3>정말 나갈까요?</h3>
+            <p>게임이 끝나지 않았어요!</p>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel-btn" onclick="hideExitConfirm()">계속하기</button>
+                <button class="modal-btn confirm-btn" onclick="confirmExit()">나가기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 점수 수정 모달 -->
+    <div id="score-edit-modal" class="modal">
+        <div class="modal-content score-edit-content">
+            <h3>✏️ 점수 수정</h3>
+            <div class="edit-player-name" id="edit-player-name">플레이어</div>
+            <div class="score-edit-controls">
+                <button class="score-adjust-btn minus" onclick="adjustScore(-10)">-10</button>
+                <input type="number" id="score-edit-input" value="0" min="0" max="9999">
+                <button class="score-adjust-btn plus" onclick="adjustScore(10)">+10</button>
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel-btn" onclick="hideScoreEdit()">취소</button>
+                <button class="modal-btn save-btn" onclick="saveScore()">저장 ✓</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
