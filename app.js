@@ -791,16 +791,12 @@ async function loadCatchmindImages() {
     gameState.catchmindImages = [];
 
     try {
-        const response = await fetch('catchmind/');
+        const response = await fetch('catchmind/index.json');
         if (response.ok) {
-            const text = await response.text();
-            const matches = text.match(/href="([^"]+\.(png|jpg|jpeg|gif|webp))"/gi);
-            if (matches) {
-                matches.forEach(match => {
-                    const filename = match.match(/href="([^"]+)"/)[1];
-                    gameState.catchmindImages.push('catchmind/' + filename);
-                });
-            }
+            const files = await response.json();
+            files.forEach(filename => {
+                gameState.catchmindImages.push('catchmind/' + filename);
+            });
         }
     } catch (e) {
         console.log('catchmind 폴더 로드 실패');
@@ -928,16 +924,12 @@ async function loadPhotoImages() {
     const allImages = [];
 
     try {
-        const response = await fetch('pictures/');
+        const response = await fetch('pictures/index.json');
         if (response.ok) {
-            const text = await response.text();
-            const matches = text.match(/href="([^"]+\.(png|jpg|jpeg|gif|webp))"/gi);
-            if (matches) {
-                matches.forEach(match => {
-                    const filename = match.match(/href="([^"]+)"/)[1];
-                    allImages.push(filename);
-                });
-            }
+            const files = await response.json();
+            files.forEach(filename => {
+                allImages.push(filename);
+            });
         }
     } catch (e) {
         console.log('pictures 폴더 로드 실패');
@@ -1154,21 +1146,17 @@ async function loadSongs() {
     gameState.songs = [];
 
     try {
-        const response = await fetch('songs/');
+        const response = await fetch('songs/index.json');
         if (response.ok) {
-            const text = await response.text();
-            const matches = text.match(/href="([^"]+\.(mp3|wav|ogg|m4a))"/gi);
-            if (matches) {
-                matches.forEach(match => {
-                    const filename = match.match(/href="([^"]+)"/)[1];
-                    // 파일명에서 확장자 제거하여 제목으로 사용
-                    const title = decodeURIComponent(filename.replace(/\.(mp3|wav|ogg|m4a)$/i, ''));
-                    gameState.songs.push({
-                        path: 'songs/' + filename,
-                        title: title
-                    });
+            const files = await response.json();
+            files.forEach(filename => {
+                // 파일명에서 확장자 제거하여 제목으로 사용
+                const title = filename.replace(/\.(mp3|wav|ogg|m4a)$/i, '');
+                gameState.songs.push({
+                    path: 'songs/' + filename,
+                    title: title
                 });
-            }
+            });
         }
     } catch (e) {
         console.log('songs 폴더 로드 실패');
