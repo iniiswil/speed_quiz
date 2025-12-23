@@ -52,7 +52,13 @@ const gameState = {
     songAudio: null,          // Audio 객체
     songElapsed: 0,           // 경과 시간 (초)
     songTimerInterval: null,  // 경과 시간 타이머
-    songIsPlaying: false      // 재생 중 여부
+    songIsPlaying: false,     // 재생 중 여부
+
+    // OX 퀴즈 관련
+    oxQuestions: [],          // [{question: '...', answer: 'O'/'X', explanation: '...'}, ...]
+    oxIndex: 0,
+    oxScores: {},
+    oxSelections: {}          // {playerName: 'O'/'X', ...}
 };
 
 // 문제 파일에서 읽어온 데이터 저장
@@ -1402,6 +1408,237 @@ function continueSongQuiz() {
 function endSongQuiz() {
     stopSongPlayback();
     showQuizResult('노래 퀴즈 종료! 🎵', gameState.songScores);
+}
+
+// === OX 퀴즈 ===
+function showOXQuizSetup() {
+    showScreen('ox-setup-screen');
+}
+
+async function loadOXQuestions() {
+    gameState.oxQuestions = [];
+
+    try {
+        const response = await fetch('ox/ox.csv');
+        if (response.ok) {
+            const text = await response.text();
+            const lines = text.split('\n').map(line => line.trim()).filter(line => line);
+
+            // 첫 번째 줄은 헤더이므로 스킵
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i];
+                // CSV 파싱 (쌍따옴표 처리)
+                const parsed = parseCSVLine(line);
+                if (parsed.length >= 3) {
+                    gameState.oxQuestions.push({
+                        question: parsed[0],
+                        answer: parsed[1].toUpperCase(),
+                        explanation: parsed[2]
+                    });
+                }
+            }
+        }
+    } catch (e) {
+        console.log('OX 퀴즈 로드 실패', e);
+    }
+
+    return gameState.oxQuestions;
+}
+
+// CSV 라인 파싱 (쌍따옴표 처리)
+function parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+
+        if (char === '"') {
+            inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+            result.push(current.trim());
+            current = '';
+        } else {
+            current += char;
+        }
+    }
+    result.push(current.trim());
+
+    return result;
+}
+
+async function startOXQuiz() {
+    await loadOXQuestions();
+
+    if (gameState.oxQuestions.length === 0) {
+        alert('OX 퀴즈 문제가 없습니다!');
+        return;
+    }
+
+    gameState.oxScores = {};
+    members.forEach(m => {
+        gameState.oxScores[m.name] = 0;
+    });
+
+    gameState.oxQuestions = shuffleArray(gameState.oxQuestions);
+    gameState.oxIndex = 0;
+
+    document.getElementById('ox-total').textContent = gameState.oxQuestions.length;
+
+    showOXQuestion();
+}
+
+function showOXQuestion() {
+    if (gameState.oxIndex >= gameState.oxQuestions.length) {
+        endOXQuiz();
+        return;
+    }
+
+    const currentQ = gameState.oxQuestions[gameState.oxIndex];
+
+    document.getElementById('ox-current').textContent = gameState.oxIndex + 1;
+    document.getElementById('ox-question-text').textContent = currentQ.question;
+
+    // 선택 초기화
+    gameState.oxSelections = {};
+
+    // 참가자별 O/X 선택 UI 생성
+    createOXSelections();
+
+    showScreen('ox-game-screen');
+}
+
+function createOXSelections() {
+    const container = document.getElementById('ox-selections');
+    container.innerHTML = '';
+
+    members.forEach(member => {
+        const playerDiv = document.createElement('div');
+        playerDiv.className = 'ox-player-row';
+        playerDiv.id = `ox-player-${member.name}`;
+
+        const photo = getMemberPhoto(member.name);
+        const photoHtml = photo ? `<img src="${photo}" class="ox-player-photo">` : '';
+
+        playerDiv.innerHTML = `
+            <div class="ox-player-info">
+                ${photoHtml}
+                <span class="ox-player-name">${member.name}</span>
+            </div>
+            <div class="ox-buttons">
+                <button class="ox-btn o-btn" onclick="selectOX('${member.name}', 'O')">⭕</button>
+                <button class="ox-btn x-btn" onclick="selectOX('${member.name}', 'X')">❌</button>
+            </div>
+        `;
+
+        container.appendChild(playerDiv);
+    });
+}
+
+function selectOX(playerName, choice) {
+    gameState.oxSelections[playerName] = choice;
+
+    // UI 업데이트
+    const playerRow = document.getElementById(`ox-player-${playerName}`);
+    const oBtn = playerRow.querySelector('.o-btn');
+    const xBtn = playerRow.querySelector('.x-btn');
+
+    oBtn.classList.remove('selected');
+    xBtn.classList.remove('selected');
+
+    if (choice === 'O') {
+        oBtn.classList.add('selected');
+    } else {
+        xBtn.classList.add('selected');
+    }
+}
+
+function confirmOXAnswers() {
+    // 모든 참가자가 선택했는지 확인
+    const allSelected = members.every(m => gameState.oxSelections[m.name]);
+
+    if (!allSelected) {
+        alert('모든 참가자가 O 또는 X를 선택해주세요!');
+        return;
+    }
+
+    showOXResult();
+}
+
+function showOXResult() {
+    const currentQ = gameState.oxQuestions[gameState.oxIndex];
+    const correctAnswer = currentQ.answer;
+
+    // 정답 표시
+    document.getElementById('ox-correct-answer').textContent = correctAnswer === 'O' ? '⭕' : '❌';
+    document.getElementById('ox-correct-answer').className = 'ox-big-answer ' + (correctAnswer === 'O' ? 'answer-o' : 'answer-x');
+
+    // 설명 표시
+    document.getElementById('ox-explanation').textContent = currentQ.explanation;
+
+    // 정답/오답 분류
+    const correctPlayers = [];
+    const wrongPlayers = [];
+
+    members.forEach(member => {
+        const selection = gameState.oxSelections[member.name];
+        if (selection === correctAnswer) {
+            correctPlayers.push(member);
+            gameState.oxScores[member.name] += 10;
+            gameState.totalScores[member.name] += 10;
+        } else {
+            wrongPlayers.push(member);
+        }
+    });
+
+    // 정답자 목록
+    const correctContainer = document.getElementById('ox-correct-players');
+    correctContainer.innerHTML = '';
+    if (correctPlayers.length === 0) {
+        correctContainer.innerHTML = '<div class="no-players">없음</div>';
+    } else {
+        correctPlayers.forEach(member => {
+            const photo = getMemberPhoto(member.name);
+            const playerEl = document.createElement('div');
+            playerEl.className = 'ox-result-player';
+            playerEl.innerHTML = `
+                ${photo ? `<img src="${photo}" class="result-player-photo">` : ''}
+                <span>${member.name}</span>
+                <span class="result-points">+10</span>
+            `;
+            correctContainer.appendChild(playerEl);
+        });
+    }
+
+    // 오답자 목록
+    const wrongContainer = document.getElementById('ox-wrong-players');
+    wrongContainer.innerHTML = '';
+    if (wrongPlayers.length === 0) {
+        wrongContainer.innerHTML = '<div class="no-players">없음</div>';
+    } else {
+        wrongPlayers.forEach(member => {
+            const photo = getMemberPhoto(member.name);
+            const playerEl = document.createElement('div');
+            playerEl.className = 'ox-result-player';
+            playerEl.innerHTML = `
+                ${photo ? `<img src="${photo}" class="result-player-photo">` : ''}
+                <span>${member.name}</span>
+            `;
+            wrongContainer.appendChild(playerEl);
+        });
+    }
+
+    showScreen('ox-result-screen');
+}
+
+function continueOXQuiz() {
+    gameState.oxIndex++;
+    showOXQuestion();
+}
+
+function endOXQuiz() {
+    showQuizResult('OX 퀴즈 종료! ⭕❌', gameState.oxScores);
 }
 
 // === 공통 퀴즈 결과 ===

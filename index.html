@@ -103,6 +103,11 @@
                     <span class="menu-title">노래 퀴즈</span>
                     <span class="menu-desc">듣고 맞춰요!</span>
                 </button>
+                <button class="game-menu-btn ox-btn" onclick="showOXQuizSetup()">
+                    <span class="menu-icon">⭕❌</span>
+                    <span class="menu-title">OX 퀴즈</span>
+                    <span class="menu-desc">맞으면 O, 틀리면 X!</span>
+                </button>
             </div>
         </div>
 
@@ -549,6 +554,97 @@
                 </div>
 
                 <button class="start-btn" onclick="continueSongQuiz()">
+                    <span>다음 문제</span>
+                    <span class="start-icon">▶️</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- OX 퀴즈 설정 -->
+        <div id="ox-setup-screen" class="screen">
+            <button class="back-btn" onclick="goToMainHub()">← 뒤로</button>
+            <h2 class="screen-title">OX 퀴즈 ⭕❌</h2>
+
+            <div class="setup-form">
+                <div class="photo-quiz-info">
+                    <div class="info-icon">🤔</div>
+                    <div class="info-text">
+                        <p>문제를 읽고 O 또는 X를 선택!</p>
+                        <p>모두 선택 후 정답을 확인해요!</p>
+                    </div>
+                    <div class="points-info">
+                        <span class="point-badge p10">문제당 10점</span>
+                    </div>
+                </div>
+
+                <button class="start-btn" onclick="startOXQuiz()">
+                    <span>게임 시작!</span>
+                    <span class="start-icon">⭕</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- OX 퀴즈 게임 화면 -->
+        <div id="ox-game-screen" class="screen">
+            <div class="game-top-bar">
+                <button class="exit-btn" onclick="endOXQuiz()">✕ 종료</button>
+            </div>
+
+            <div class="catchmind-header">
+                <div class="catchmind-progress">
+                    문제 <span id="ox-current">1</span> / <span id="ox-total">10</span>
+                </div>
+                <div class="quiz-points">10점</div>
+            </div>
+
+            <!-- 문제 표시 -->
+            <div class="ox-question-container">
+                <div class="ox-question-box">
+                    <p id="ox-question-text">문제가 여기에 표시됩니다.</p>
+                </div>
+            </div>
+
+            <!-- 참가자별 O/X 선택 -->
+            <div class="ox-selections" id="ox-selections">
+                <!-- 동적으로 생성됨 -->
+            </div>
+
+            <button class="start-btn ox-confirm-btn" onclick="confirmOXAnswers()">
+                <span>정답 확인!</span>
+                <span class="start-icon">🎯</span>
+            </button>
+        </div>
+
+        <!-- OX 퀴즈 결과 화면 -->
+        <div id="ox-result-screen" class="screen">
+            <div class="question-result-container">
+                <h2 id="ox-result-title" class="question-result-title">정답은...</h2>
+
+                <div class="ox-answer-reveal">
+                    <div id="ox-correct-answer" class="ox-big-answer">⭕</div>
+                </div>
+
+                <div class="ox-explanation-box">
+                    <div class="explanation-label">💡 설명</div>
+                    <p id="ox-explanation">설명이 여기에 표시됩니다.</p>
+                </div>
+
+                <div class="ox-result-lists">
+                    <div class="ox-result-group correct">
+                        <div class="group-header">😊 정답!</div>
+                        <div id="ox-correct-players" class="player-list">
+                            <!-- 동적으로 생성됨 -->
+                        </div>
+                    </div>
+                    <div class="ox-result-group wrong">
+                        <div class="group-header">😅 오답!</div>
+                        <div id="ox-wrong-players" class="player-list">
+                            <!-- 동적으로 생성됨 -->
+                        </div>
+                    </div>
+                </div>
+
+                <button class="start-btn" onclick="continueOXQuiz()">
                     <span>다음 문제</span>
                     <span class="start-icon">▶️</span>
                 </button>
