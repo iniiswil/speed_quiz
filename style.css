@@ -2120,17 +2120,21 @@ body {
     flex-shrink: 0;
 }
 
+.game-menu-btn .menu-text {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
 .game-menu-btn .menu-title {
     font-size: 1.4rem;
     font-weight: bold;
     color: white;
-    display: block;
 }
 
 .game-menu-btn .menu-desc {
     font-size: 0.9rem;
     color: rgba(255,255,255,0.8);
-    display: block;
 }
 
 .speed-quiz-btn {
@@ -2856,11 +2860,7 @@ body {
 /* === OX 퀴즈 스타일 === */
 
 /* OX 퀴즈 메뉴 버튼 */
-.ox-btn-menu {
-    background: linear-gradient(135deg, #e74c3c, #c0392b);
-}
-
-.game-menu-btn.ox-btn {
+.game-menu-btn.ox-quiz-btn {
     background: linear-gradient(135deg, #3498db, #2980b9);
 }
 
