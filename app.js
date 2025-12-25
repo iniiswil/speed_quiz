@@ -758,33 +758,33 @@ function getCategoryName(category) {
     return names[category] || category;
 }
 
-// 문제 타입 표시 업데이트
+// 문제 타입 표시 업데이트 (카드 내부)
 function updateQuestionTypeIndicator(question) {
-    const speedIndicator = document.getElementById('speed-mode-indicator');
-    const bodyIndicator = document.getElementById('body-mode-indicator');
+    const cardSpeedMode = document.getElementById('card-speed-mode');
+    const cardBodyMode = document.getElementById('card-body-mode');
     const gameScreen = document.getElementById('speed-game-screen');
     const points = getQuestionPoints(question);
     const categoryName = getCategoryName(question.category);
 
     if (question.type === 'body') {
-        speedIndicator.style.display = 'none';
-        bodyIndicator.style.display = 'block';
+        // 몸으로 말해요 모드
+        cardSpeedMode.style.display = 'none';
+        cardBodyMode.style.display = 'flex';
         gameScreen.classList.add('body-mode-active');
 
-        document.getElementById('body-mode-category').textContent = `[ ${categoryName} ]`;
+        document.getElementById('card-body-category').textContent = `[ ${categoryName} ]`;
 
         if (question.category === 'proverbs') {
-            document.getElementById('body-mode-points').textContent = `🔥 ${points}점 🔥`;
-            document.getElementById('body-mode-points').classList.add('bonus');
+            document.getElementById('card-body-points').textContent = `🔥 ${points}점`;
         } else {
-            document.getElementById('body-mode-points').textContent = `${points}점`;
-            document.getElementById('body-mode-points').classList.remove('bonus');
+            document.getElementById('card-body-points').textContent = `${points}점`;
         }
     } else {
-        speedIndicator.style.display = 'block';
-        bodyIndicator.style.display = 'none';
+        // 스피드 퀴즈 모드
+        cardSpeedMode.style.display = 'flex';
+        cardBodyMode.style.display = 'none';
         gameScreen.classList.remove('body-mode-active');
-        document.getElementById('speed-mode-points').textContent = `${points}점`;
+        document.getElementById('card-speed-points').textContent = `${points}점`;
     }
 }
 
