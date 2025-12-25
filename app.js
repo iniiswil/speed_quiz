@@ -67,6 +67,153 @@ let loadedQuestions = {
     body: []
 };
 
+// === 효과음 시스템 ===
+const SoundFX = {
+    audioContext: null,
+
+    init() {
+        if (!this.audioContext) {
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+    },
+
+    // 정답 효과음 (상승하는 밝은 소리)
+    correct() {
+        try {
+            this.init();
+            const ctx = this.audioContext;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523, ctx.currentTime);
+            osc.frequency.setValueAtTime(659, ctx.currentTime + 0.1);
+            osc.frequency.setValueAtTime(784, ctx.currentTime + 0.2);
+            gain.gain.setValueAtTime(0.3, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.4);
+        } catch(e) { console.log('Sound error:', e); }
+    },
+
+    // 오답/패스 효과음 (낮은 버저 소리)
+    wrong() {
+        try {
+            this.init();
+            const ctx = this.audioContext;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(200, ctx.currentTime);
+            osc.frequency.setValueAtTime(150, ctx.currentTime + 0.15);
+            gain.gain.setValueAtTime(0.2, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.3);
+        } catch(e) { console.log('Sound error:', e); }
+    },
+
+    // 타이머 틱 (마지막 10초)
+    tick() {
+        try {
+            this.init();
+            const ctx = this.audioContext;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, ctx.currentTime);
+            gain.gain.setValueAtTime(0.15, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.1);
+        } catch(e) { console.log('Sound error:', e); }
+    },
+
+    // 게임 시작
+    gameStart() {
+        try {
+            this.init();
+            const ctx = this.audioContext;
+            const notes = [523, 659, 784, 1047];
+            notes.forEach((freq, i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.12);
+                gain.gain.setValueAtTime(0.2, ctx.currentTime + i * 0.12);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.12 + 0.2);
+                osc.start(ctx.currentTime + i * 0.12);
+                osc.stop(ctx.currentTime + i * 0.12 + 0.2);
+            });
+        } catch(e) { console.log('Sound error:', e); }
+    },
+
+    // 게임 종료
+    gameEnd() {
+        try {
+            this.init();
+            const ctx = this.audioContext;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(392, ctx.currentTime);
+            osc.frequency.setValueAtTime(330, ctx.currentTime + 0.2);
+            osc.frequency.setValueAtTime(262, ctx.currentTime + 0.4);
+            gain.gain.setValueAtTime(0.25, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.6);
+        } catch(e) { console.log('Sound error:', e); }
+    },
+
+    // 버튼 클릭
+    click() {
+        try {
+            this.init();
+            const ctx = this.audioContext;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, ctx.currentTime);
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+            osc.start(ctx.currentTime);
+            osc.stop(ctx.currentTime + 0.05);
+        } catch(e) { console.log('Sound error:', e); }
+    },
+
+    // 타임아웃 경고 (5초)
+    warning() {
+        try {
+            this.init();
+            const ctx = this.audioContext;
+            for (let i = 0; i < 3; i++) {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(440, ctx.currentTime + i * 0.15);
+                gain.gain.setValueAtTime(0.1, ctx.currentTime + i * 0.15);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.15 + 0.1);
+                osc.start(ctx.currentTime + i * 0.15);
+                osc.stop(ctx.currentTime + i * 0.15 + 0.1);
+            }
+        } catch(e) { console.log('Sound error:', e); }
+    }
+};
+
 // === 초기화 ===
 document.addEventListener('DOMContentLoaded', () => {
     // 총점수 초기화
@@ -171,15 +318,32 @@ function updateTotalScoreboard() {
 
     rankedPlayers.forEach(({ name, score, rank }) => {
         const item = document.createElement('div');
-        item.className = 'score-item clickable';
+        item.className = 'score-item';
         const medal = getMedalForRank(rank);
         const photo = getMemberPhoto(name);
         const photoHtml = photo ? `<img src="${photo}" class="scoreboard-photo">` : '';
-        item.innerHTML = `
-            <span class="score-name">${medal} ${photoHtml}<span class="name-text">${name}</span></span>
-            <span class="score-value">${score}점</span>
-        `;
-        item.onclick = () => showScoreEdit(name, score, 'total');
+
+        // 이름 영역 (클릭하면 이름 수정)
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'score-name clickable-name';
+        nameSpan.innerHTML = `${medal} ${photoHtml}<span class="name-text">${name}</span>`;
+        nameSpan.onclick = (e) => {
+            e.stopPropagation();
+            showNameEdit(name);
+        };
+
+        // 점수 영역 (클릭하면 점수 수정)
+        const scoreSpan = document.createElement('span');
+        scoreSpan.className = 'score-value clickable';
+        scoreSpan.textContent = `${score}점`;
+        scoreSpan.style.cursor = 'pointer';
+        scoreSpan.onclick = (e) => {
+            e.stopPropagation();
+            showScoreEdit(name, score, 'total');
+        };
+
+        item.appendChild(nameSpan);
+        item.appendChild(scoreSpan);
         container.appendChild(item);
     });
 }
@@ -232,6 +396,87 @@ function saveScore() {
         }
     }
     hideScoreEdit();
+}
+
+// === 이름 수정 ===
+let editingNamePlayer = null;
+
+function showNameEdit(playerName) {
+    editingNamePlayer = playerName;
+    const photo = getMemberPhoto(playerName);
+    document.getElementById('edit-name-photo').src = photo || '';
+    document.getElementById('name-edit-input').value = playerName;
+    document.getElementById('name-edit-modal').classList.add('active');
+    // 입력창에 포커스
+    setTimeout(() => {
+        document.getElementById('name-edit-input').select();
+    }, 100);
+}
+
+function hideNameEdit() {
+    document.getElementById('name-edit-modal').classList.remove('active');
+    editingNamePlayer = null;
+}
+
+function saveName() {
+    if (editingNamePlayer) {
+        const newName = document.getElementById('name-edit-input').value.trim();
+        if (newName && newName !== editingNamePlayer) {
+            const oldName = editingNamePlayer;
+
+            // members 배열에서 이름 변경
+            const member = members.find(m => m.name === oldName);
+            if (member) {
+                member.name = newName;
+            }
+
+            // totalScores에서 이름 변경
+            if (gameState.totalScores.hasOwnProperty(oldName)) {
+                gameState.totalScores[newName] = gameState.totalScores[oldName];
+                delete gameState.totalScores[oldName];
+            }
+
+            // sessionScores에서 이름 변경
+            if (gameState.sessionScores.hasOwnProperty(oldName)) {
+                gameState.sessionScores[newName] = gameState.sessionScores[oldName];
+                delete gameState.sessionScores[oldName];
+            }
+
+            // catchmindScores에서 이름 변경
+            if (gameState.catchmindScores.hasOwnProperty(oldName)) {
+                gameState.catchmindScores[newName] = gameState.catchmindScores[oldName];
+                delete gameState.catchmindScores[oldName];
+            }
+
+            // photoScores에서 이름 변경
+            if (gameState.photoScores.hasOwnProperty(oldName)) {
+                gameState.photoScores[newName] = gameState.photoScores[oldName];
+                delete gameState.photoScores[oldName];
+            }
+
+            // songScores에서 이름 변경
+            if (gameState.songScores.hasOwnProperty(oldName)) {
+                gameState.songScores[newName] = gameState.songScores[oldName];
+                delete gameState.songScores[oldName];
+            }
+
+            // oxScores에서 이름 변경
+            if (gameState.oxScores.hasOwnProperty(oldName)) {
+                gameState.oxScores[newName] = gameState.oxScores[oldName];
+                delete gameState.oxScores[oldName];
+            }
+
+            // teamMatches에서 이름 변경
+            gameState.teamMatches.forEach(team => {
+                if (team.presenter === oldName) team.presenter = newName;
+                if (team.guesser === oldName) team.guesser = newName;
+            });
+
+            // 점수판 업데이트
+            updateTotalScoreboard();
+        }
+    }
+    hideNameEdit();
 }
 
 // === 스피드 퀴즈 ===
@@ -567,25 +812,51 @@ function startTimer() {
     gameState.isGameRunning = true;
     gameState.isPaused = false;
     updateTimerDisplay();
+    updateTimerBar();
+    SoundFX.gameStart();
 
     gameState.timerInterval = setInterval(() => {
-        if (!gameState.isPenalty) {
-            gameState.currentTimer--;
-            updateTimerDisplay();
+        gameState.currentTimer--;
+        updateTimerDisplay();
+        updateTimerBar();
 
-            if (gameState.currentTimer <= 10) {
-                document.querySelector('.timer-circle').classList.add('timer-warning');
-            }
+        // 마지막 10초 긴장감 연출
+        if (gameState.currentTimer <= 10 && gameState.currentTimer > 0) {
+            document.querySelector('.timer-circle').classList.add('timer-warning');
+            document.querySelector('.timer-display').classList.add('timer-urgent');
+            SoundFX.tick();
 
-            if (gameState.currentTimer <= 0) {
-                endSpeedRound();
+            // 마지막 5초는 더 강한 긴장감
+            if (gameState.currentTimer <= 5) {
+                document.getElementById('speed-game-screen').classList.add('speed-game-urgent');
             }
+        }
+
+        if (gameState.currentTimer <= 0) {
+            SoundFX.gameEnd();
+            endSpeedRound();
         }
     }, 1000);
 }
 
 function updateTimerDisplay() {
     document.getElementById('timer').textContent = gameState.currentTimer;
+}
+
+function updateTimerBar() {
+    const bar = document.getElementById('timer-bar');
+    if (!bar) return;
+
+    const percentage = (gameState.currentTimer / gameState.speedTimer) * 100;
+    bar.style.width = percentage + '%';
+
+    // 색상 변화
+    bar.classList.remove('warning', 'danger');
+    if (gameState.currentTimer <= 10) {
+        bar.classList.add('danger');
+    } else if (gameState.currentTimer <= 20) {
+        bar.classList.add('warning');
+    }
 }
 
 function stopGame() {
@@ -600,8 +871,18 @@ function stopGame() {
         clearTimeout(gameState.penaltyTimeout);
         gameState.penaltyTimeout = null;
     }
+    // 모든 긴장감 효과 제거
     document.querySelector('.timer-circle')?.classList.remove('timer-warning');
+    document.querySelector('.timer-display')?.classList.remove('timer-urgent');
+    document.getElementById('speed-game-screen')?.classList.remove('speed-game-urgent');
     document.getElementById('penalty-overlay')?.classList.remove('active');
+
+    // 타이머 막대 초기화
+    const bar = document.getElementById('timer-bar');
+    if (bar) {
+        bar.style.width = '100%';
+        bar.classList.remove('warning', 'danger');
+    }
 }
 
 function setButtonsDisabled(disabled) {
@@ -619,6 +900,8 @@ function setButtonsDisabled(disabled) {
 function markCorrect() {
     if (!gameState.isGameRunning || gameState.isPaused || gameState.isPenalty) return;
 
+    SoundFX.correct();
+
     const currentQuestion = gameState.questions[gameState.currentQuestionIndex];
     const points = getQuestionPoints(currentQuestion);
 
@@ -633,6 +916,8 @@ function markCorrect() {
 
 function markWrong() {
     if (!gameState.isGameRunning || gameState.isPaused || gameState.isPenalty) return;
+
+    SoundFX.wrong();
 
     gameState.wrongCount++;
     gameState.isPenalty = true;
@@ -666,10 +951,72 @@ function markWrong() {
 
 function showEffect(type) {
     const card = document.getElementById('question-card');
-    card.style.borderColor = type === 'correct' ? '#38ef7d' : '#ff6b6b';
-    setTimeout(() => {
-        card.style.borderColor = 'transparent';
-    }, 200);
+
+    if (type === 'correct') {
+        // 카드 반짝임 효과
+        card.classList.add('correct-flash');
+        setTimeout(() => card.classList.remove('correct-flash'), 500);
+
+        // 점수 증가 애니메이션
+        const scoreEl = document.getElementById('score');
+        scoreEl.classList.add('score-increase');
+        setTimeout(() => scoreEl.classList.remove('score-increase'), 300);
+
+        // 파티클 효과
+        spawnCorrectParticles();
+
+        // 점수 팝업
+        const currentQuestion = gameState.questions[gameState.currentQuestionIndex - 1];
+        if (currentQuestion) {
+            const points = getQuestionPoints(currentQuestion);
+            showScorePopup(points);
+        }
+    } else {
+        // 오답 흔들림 효과
+        card.classList.add('wrong-shake');
+        setTimeout(() => card.classList.remove('wrong-shake'), 500);
+    }
+}
+
+// 정답 파티클 효과
+function spawnCorrectParticles() {
+    const emojis = ['⭐', '✨', '🎉', '💫', '🌟', '🎊'];
+    const container = document.getElementById('question-card');
+    const rect = container.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    for (let i = 0; i < 8; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'correct-particle';
+        particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        particle.style.left = centerX + 'px';
+        particle.style.top = centerY + 'px';
+
+        // 랜덤 방향
+        const angle = (Math.PI * 2 * i) / 8;
+        const distance = 80 + Math.random() * 40;
+        particle.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+        particle.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 1000);
+    }
+}
+
+// 점수 팝업 효과
+function showScorePopup(points) {
+    const scoreEl = document.getElementById('score');
+    const rect = scoreEl.getBoundingClientRect();
+
+    const popup = document.createElement('div');
+    popup.className = 'score-popup';
+    popup.textContent = '+' + points;
+    popup.style.left = rect.left + rect.width / 2 - 20 + 'px';
+    popup.style.top = rect.top + 'px';
+
+    document.body.appendChild(popup);
+    setTimeout(() => popup.remove(), 1000);
 }
 
 function endSpeedRound() {

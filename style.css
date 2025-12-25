@@ -425,6 +425,85 @@ body {
     animation: pulse 0.5s infinite;
 }
 
+/* 타이머 진행 막대 */
+.timer-bar-container {
+    width: 100%;
+    height: 12px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 6px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.timer-bar {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #11998e, #38ef7d);
+    border-radius: 6px;
+    transition: width 1s linear;
+}
+
+/* 시간별 색상 변화 */
+.timer-bar.warning {
+    background: linear-gradient(90deg, #f39c12, #e74c3c);
+}
+
+.timer-bar.danger {
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+    animation: barPulse 0.5s ease-in-out infinite;
+}
+
+@keyframes barPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* 긴장감 연출 - 화면 전체 */
+.speed-game-urgent {
+    animation: urgentShake 0.5s ease-in-out infinite;
+}
+
+@keyframes urgentShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}
+
+/* 긴장감 연출 - 테두리 깜빡임 */
+.speed-game-urgent .question-card {
+    animation: urgentBorder 0.5s ease-in-out infinite;
+    border: 4px solid #e74c3c;
+}
+
+@keyframes urgentBorder {
+    0%, 100% { border-color: #e74c3c; box-shadow: 0 0 20px rgba(231, 76, 60, 0.5); }
+    50% { border-color: #f39c12; box-shadow: 0 0 30px rgba(243, 156, 18, 0.7); }
+}
+
+/* 긴장감 - 타이머 숫자 커지기 */
+.timer-urgent #timer {
+    font-size: 2.5rem;
+    color: #e74c3c;
+    animation: timerUrgent 0.3s ease-in-out infinite;
+    text-shadow: 0 0 10px rgba(231, 76, 60, 0.8);
+}
+
+@keyframes timerUrgent {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+/* 배경 깜빡임 */
+.speed-game-urgent-bg {
+    animation: urgentBg 1s ease-in-out infinite;
+}
+
+@keyframes urgentBg {
+    0%, 100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    50% { background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); }
+}
+
 @keyframes pulse {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.1); }
@@ -714,6 +793,136 @@ body {
         transform: translateY(100vh) rotate(720deg);
         opacity: 0;
     }
+}
+
+/* 정답 파티클 효과 */
+.correct-particle {
+    position: fixed;
+    pointer-events: none;
+    font-size: 2rem;
+    animation: particleFly 1s ease-out forwards;
+    z-index: 1000;
+}
+
+@keyframes particleFly {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(0.5);
+    }
+}
+
+/* 점수 팝업 효과 */
+.score-popup {
+    position: fixed;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #38ef7d;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    pointer-events: none;
+    animation: scorePopup 1s ease-out forwards;
+    z-index: 1000;
+}
+
+@keyframes scorePopup {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-30px) scale(1.3);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-60px) scale(1);
+    }
+}
+
+/* 정답 카드 반짝임 효과 */
+.question-card.correct-flash {
+    animation: correctFlash 0.5s ease;
+}
+
+@keyframes correctFlash {
+    0% { box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    50% { box-shadow: 0 0 50px rgba(56, 239, 125, 0.8), 0 0 100px rgba(56, 239, 125, 0.4); }
+    100% { box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+}
+
+/* 오답 카드 흔들림 효과 */
+.question-card.wrong-shake {
+    animation: wrongShake 0.5s ease;
+}
+
+@keyframes wrongShake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* 점수 증가 애니메이션 */
+#score.score-increase {
+    animation: scoreIncrease 0.3s ease;
+}
+
+@keyframes scoreIncrease {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.5); color: #38ef7d; }
+    100% { transform: scale(1); }
+}
+
+/* 버튼 누름 효과 강화 */
+.game-btn:active {
+    transform: translateY(3px) scale(0.95);
+}
+
+.correct-btn:active {
+    box-shadow: 0 0 30px rgba(56, 239, 125, 0.8);
+}
+
+.wrong-btn:active {
+    box-shadow: 0 0 30px rgba(255, 107, 107, 0.8);
+}
+
+/* 게임 화면 글로우 효과 */
+.game-header {
+    position: relative;
+}
+
+.timer-circle {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.timer-circle::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #667eea, #764ba2, #667eea);
+    z-index: -1;
+    animation: timerGlow 2s ease-in-out infinite;
+}
+
+@keyframes timerGlow {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+/* 점수 표시 글로우 */
+.score-display {
+    position: relative;
+    overflow: visible;
+}
+
+#score {
+    transition: all 0.2s ease;
 }
 
 /* 게임 상단 바 */
@@ -1313,6 +1522,352 @@ body {
     pointer-events: none;
 }
 
+/* 입장 화면 SVG 배경 */
+.entry-bg-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+#entry-screen {
+    position: relative;
+}
+
+#entry-screen > *:not(.entry-bg-svg) {
+    position: relative;
+    z-index: 1;
+}
+
+/* 오로라 원형 애니메이션 */
+.aurora-circle {
+    animation: auroraFloat 8s ease-in-out infinite;
+}
+
+.aurora-circle.a1 { animation-delay: 0s; animation-duration: 7s; }
+.aurora-circle.a2 { animation-delay: 1s; animation-duration: 9s; }
+.aurora-circle.a3 { animation-delay: 2s; animation-duration: 8s; }
+.aurora-circle.a4 { animation-delay: 0.5s; animation-duration: 10s; }
+
+@keyframes auroraFloat {
+    0%, 100% {
+        transform: scale(1) translate(0, 0);
+        opacity: 0.5;
+    }
+    25% {
+        transform: scale(1.2) translate(10px, -20px);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(0.9) translate(-15px, 10px);
+        opacity: 0.4;
+    }
+    75% {
+        transform: scale(1.1) translate(5px, 15px);
+        opacity: 0.6;
+    }
+}
+
+/* 스파클 (별 반짝임) 애니메이션 */
+.sparkle {
+    animation: sparkleGlow 1.5s ease-in-out infinite;
+}
+
+.sparkle.sp1 { animation-delay: 0s; }
+.sparkle.sp2 { animation-delay: 0.3s; }
+.sparkle.sp3 { animation-delay: 0.6s; }
+.sparkle.sp4 { animation-delay: 0.9s; }
+.sparkle.sp5 { animation-delay: 1.2s; }
+.sparkle.sp6 { animation-delay: 0.15s; }
+
+@keyframes sparkleGlow {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.4;
+    }
+    50% {
+        transform: scale(2);
+        opacity: 1;
+        filter: drop-shadow(0 0 6px white);
+    }
+}
+
+/* 무지개 아치 애니메이션 */
+.rainbow-arc {
+    animation: rainbowPulse 4s ease-in-out infinite;
+}
+
+@keyframes rainbowPulse {
+    0%, 100% {
+        opacity: 0.2;
+        stroke-width: 6;
+    }
+    50% {
+        opacity: 0.5;
+        stroke-width: 12;
+    }
+}
+
+/* === 크리스마스 장식 === */
+
+/* 눈 내리는 효과 */
+.snowfall {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+    overflow: hidden;
+}
+
+.snowflake {
+    position: absolute;
+    top: -50px;
+    color: white;
+    font-size: 1.5rem;
+    text-shadow: 0 0 10px rgba(255,255,255,0.8);
+    animation: snowfall 8s linear infinite;
+    opacity: 0.8;
+}
+
+.snowflake:nth-child(1) { left: 5%; animation-duration: 8s; animation-delay: 0s; font-size: 1.2rem; }
+.snowflake:nth-child(2) { left: 15%; animation-duration: 10s; animation-delay: 1s; font-size: 1.8rem; }
+.snowflake:nth-child(3) { left: 25%; animation-duration: 7s; animation-delay: 2s; font-size: 1rem; }
+.snowflake:nth-child(4) { left: 35%; animation-duration: 9s; animation-delay: 0.5s; font-size: 1.5rem; }
+.snowflake:nth-child(5) { left: 45%; animation-duration: 11s; animation-delay: 3s; font-size: 1.3rem; }
+.snowflake:nth-child(6) { left: 55%; animation-duration: 8s; animation-delay: 1.5s; font-size: 1.6rem; }
+.snowflake:nth-child(7) { left: 65%; animation-duration: 10s; animation-delay: 2.5s; font-size: 1.1rem; }
+.snowflake:nth-child(8) { left: 75%; animation-duration: 7s; animation-delay: 0.8s; font-size: 1.4rem; }
+.snowflake:nth-child(9) { left: 85%; animation-duration: 9s; animation-delay: 1.8s; font-size: 1.7rem; }
+.snowflake:nth-child(10) { left: 92%; animation-duration: 12s; animation-delay: 0.3s; font-size: 1.2rem; }
+.snowflake:nth-child(11) { left: 10%; animation-duration: 6s; animation-delay: 4s; font-size: 1rem; }
+.snowflake:nth-child(12) { left: 80%; animation-duration: 8s; animation-delay: 3.5s; font-size: 1.5rem; }
+
+@keyframes snowfall {
+    0% {
+        transform: translateY(-50px) rotate(0deg) translateX(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.8;
+    }
+    90% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg) translateX(30px);
+        opacity: 0;
+    }
+}
+
+/* 크리스마스 인사 */
+.christmas-greeting {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    color: #c41e3a;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 2px 4px rgba(0,0,0,0.2);
+    animation: christmasGlow 2s ease-in-out infinite;
+}
+
+@keyframes christmasGlow {
+    0%, 100% {
+        color: #c41e3a;
+        text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(196,30,58,0.5);
+    }
+    50% {
+        color: #2e8b57;
+        text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(46,139,87,0.5);
+    }
+}
+
+/* 크리스마스 색상 테두리 (총점수판) */
+.total-scoreboard {
+    border: 3px solid transparent;
+    background:
+        linear-gradient(white, white) padding-box,
+        linear-gradient(135deg, #c41e3a, #2e8b57, #c41e3a, #2e8b57) border-box;
+    animation: christmasBorder 4s linear infinite;
+    background-size: 100% 100%, 400% 400%;
+}
+
+@keyframes christmasBorder {
+    0% { background-position: 0 0, 0% 50%; }
+    50% { background-position: 0 0, 100% 50%; }
+    100% { background-position: 0 0, 0% 50%; }
+}
+
+/* 크리스마스 오너먼트 애니메이션 */
+.ornament {
+    animation: ornamentSwing 3s ease-in-out infinite;
+    transform-origin: center top;
+}
+
+.red-ornament { animation-delay: 0s; }
+.green-ornament { animation-delay: 0.5s; }
+.gold-ornament { animation-delay: 1s; }
+
+@keyframes ornamentSwing {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+}
+
+/* 오너먼트 반짝임 */
+.ornament {
+    filter: drop-shadow(0 0 8px currentColor);
+}
+
+.red-ornament {
+    filter: drop-shadow(0 0 10px rgba(196, 30, 58, 0.6));
+    animation: ornamentGlow 2s ease-in-out infinite, ornamentSwing 3s ease-in-out infinite;
+}
+
+.green-ornament {
+    filter: drop-shadow(0 0 10px rgba(46, 139, 87, 0.6));
+    animation: ornamentGlow 2s ease-in-out infinite 0.5s, ornamentSwing 3s ease-in-out infinite 0.5s;
+}
+
+.gold-ornament {
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6));
+    animation: ornamentGlow 2s ease-in-out infinite 1s, ornamentSwing 3s ease-in-out infinite 1s;
+}
+
+@keyframes ornamentGlow {
+    0%, 100% { filter: drop-shadow(0 0 8px currentColor); opacity: 0.9; }
+    50% { filter: drop-shadow(0 0 15px currentColor); opacity: 1; }
+}
+
+/* 지팡이 사탕 애니메이션 */
+.candy-cane {
+    animation: candyFloat 4s ease-in-out infinite;
+}
+
+.candy-cane.cc1 { animation-delay: 0s; }
+.candy-cane.cc2 { animation-delay: 1s; }
+
+@keyframes candyFloat {
+    0%, 100% {
+        transform: translate(30px, 200px) rotate(-15deg) translateY(0);
+    }
+    50% {
+        transform: translate(30px, 200px) rotate(-10deg) translateY(-10px);
+    }
+}
+
+.candy-cane.cc2 {
+    animation-name: candyFloat2;
+}
+
+@keyframes candyFloat2 {
+    0%, 100% {
+        transform: translate(360px, 550px) rotate(15deg) translateY(0);
+    }
+    50% {
+        transform: translate(360px, 550px) rotate(20deg) translateY(-10px);
+    }
+}
+
+/* 트리 꼭대기 별 애니메이션 */
+.tree-star {
+    animation: starShine 1.5s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px gold);
+}
+
+@keyframes starShine {
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
+        filter: drop-shadow(0 0 10px gold);
+    }
+    50% {
+        transform: scale(1.2) rotate(10deg);
+        filter: drop-shadow(0 0 20px gold) drop-shadow(0 0 30px yellow);
+    }
+}
+
+/* 크리스마스 전구 조명 */
+.christmas-lights {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 5px;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.christmas-lights::before {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #333;
+    z-index: -1;
+}
+
+.light {
+    width: 15px;
+    height: 20px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    position: relative;
+    animation: lightGlow 1s ease-in-out infinite;
+}
+
+.light::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 8px;
+    background: #555;
+    border-radius: 2px 2px 0 0;
+}
+
+.light.red {
+    background: radial-gradient(circle at 30% 30%, #ff6b6b, #c41e3a);
+    box-shadow: 0 0 15px #ff6b6b, 0 0 30px rgba(255, 107, 107, 0.5);
+    animation-delay: 0s;
+}
+
+.light.green {
+    background: radial-gradient(circle at 30% 30%, #6bcb77, #2e8b57);
+    box-shadow: 0 0 15px #6bcb77, 0 0 30px rgba(107, 203, 119, 0.5);
+    animation-delay: 0.2s;
+}
+
+.light.gold {
+    background: radial-gradient(circle at 30% 30%, #ffd93d, #f4a020);
+    box-shadow: 0 0 15px #ffd93d, 0 0 30px rgba(255, 217, 61, 0.5);
+    animation-delay: 0.4s;
+}
+
+.light.blue {
+    background: radial-gradient(circle at 30% 30%, #74b9ff, #0984e3);
+    box-shadow: 0 0 15px #74b9ff, 0 0 30px rgba(116, 185, 255, 0.5);
+    animation-delay: 0.6s;
+}
+
+@keyframes lightGlow {
+    0%, 100% {
+        opacity: 1;
+        filter: brightness(1);
+    }
+    50% {
+        opacity: 0.6;
+        filter: brightness(0.7);
+    }
+}
+
 /* 떠다니는 장식 */
 .floating-decorations {
     position: absolute;
@@ -1395,6 +1950,132 @@ body {
 @keyframes decoSpin {
     0%, 100% { transform: rotate(-10deg) scale(1); }
     50% { transform: rotate(10deg) scale(1.2); }
+}
+
+/* SVG 배경 장식 */
+.hub-bg-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    overflow: visible;
+}
+
+#main-hub-screen {
+    position: relative;
+}
+
+#main-hub-screen > *:not(.hub-bg-svg) {
+    position: relative;
+    z-index: 1;
+}
+
+/* 둥둥 떠다니는 원 애니메이션 */
+.float-circle {
+    animation: floatCircle 6s ease-in-out infinite;
+}
+
+.float-circle.c1 { animation-duration: 7s; animation-delay: 0s; }
+.float-circle.c2 { animation-duration: 8s; animation-delay: 1s; }
+.float-circle.c3 { animation-duration: 6s; animation-delay: 2s; }
+.float-circle.c4 { animation-duration: 9s; animation-delay: 0.5s; }
+.float-circle.c5 { animation-duration: 7s; animation-delay: 1.5s; }
+
+@keyframes floatCircle {
+    0%, 100% {
+        transform: translateY(0) translateX(0) scale(1);
+        opacity: 0.6;
+    }
+    25% {
+        transform: translateY(-20px) translateX(10px) scale(1.1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translateY(-10px) translateX(-15px) scale(0.95);
+        opacity: 0.5;
+    }
+    75% {
+        transform: translateY(-25px) translateX(5px) scale(1.05);
+        opacity: 0.7;
+    }
+}
+
+/* 반짝이는 별 애니메이션 */
+.twinkle-star {
+    animation: twinkleStar 2s ease-in-out infinite;
+    transform-origin: center;
+}
+
+.twinkle-star.s1 { animation-delay: 0s; }
+.twinkle-star.s2 { animation-delay: 0.5s; }
+.twinkle-star.s3 { animation-delay: 1s; }
+.twinkle-star.s4 { animation-delay: 1.5s; }
+
+@keyframes twinkleStar {
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.3) rotate(180deg);
+        opacity: 1;
+        filter: drop-shadow(0 0 8px gold);
+    }
+}
+
+/* 떠다니는 도형 애니메이션 */
+.float-shape {
+    animation: floatShape 5s ease-in-out infinite;
+    transform-origin: center;
+}
+
+.float-shape.t1 { animation-delay: 0s; animation-duration: 6s; }
+.float-shape.t2 { animation-delay: 1s; animation-duration: 5s; }
+.float-shape.t3 { animation-delay: 2s; animation-duration: 7s; }
+
+@keyframes floatShape {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.4;
+    }
+    50% {
+        transform: translateY(-30px) rotate(180deg);
+        opacity: 0.6;
+    }
+}
+
+/* 컨페티 애니메이션 */
+.confetti {
+    animation: confettiFall 4s linear infinite;
+}
+
+.confetti:nth-child(odd) {
+    animation-duration: 5s;
+}
+
+.confetti:nth-child(3n) {
+    animation-delay: 1s;
+}
+
+.confetti:nth-child(4n) {
+    animation-delay: 2s;
+}
+
+@keyframes confettiFall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(50px) rotate(360deg);
+        opacity: 0.3;
+    }
 }
 
 /* 점수 수정 힌트 */
@@ -2002,11 +2683,40 @@ body {
     padding: 30px 50px;
     margin-top: 40px;
     animation: bigStartPulse 2s ease-in-out infinite;
+    position: relative;
+}
+
+.big-start-btn::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -10px;
+    background: linear-gradient(135deg, #c41e3a, #2e8b57, #FFD700, #c41e3a, #2e8b57);
+    background-size: 400% 400%;
+    border-radius: 24px;
+    z-index: -1;
+    animation: glowingBorder 3s ease infinite;
+    opacity: 0.7;
+    filter: blur(8px);
+}
+
+@keyframes glowingBorder {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 @keyframes bigStartPulse {
-    0%, 100% { transform: scale(1); box-shadow: 0 6px 0 #0d7d73; }
-    50% { transform: scale(1.05); box-shadow: 0 10px 0 #0d7d73; }
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 6px 0 #0d7d73, 0 0 30px rgba(56, 239, 125, 0.4);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 10px 0 #0d7d73, 0 0 50px rgba(56, 239, 125, 0.6);
+    }
 }
 
 /* 참가자 소개 화면 */
@@ -2103,15 +2813,49 @@ body {
     transition: all 0.3s;
     box-shadow: 0 6px 0 rgba(0,0,0,0.2);
     text-align: left;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 버튼 빛나는 효과 */
+.game-menu-btn::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255,255,255,0.3) 50%,
+        transparent 70%
+    );
+    transform: translateX(-100%) rotate(45deg);
+    transition: none;
+    pointer-events: none;
+}
+
+.game-menu-btn:hover::before {
+    animation: btnShine 0.6s ease-out;
+}
+
+@keyframes btnShine {
+    0% {
+        transform: translateX(-100%) rotate(45deg);
+    }
+    100% {
+        transform: translateX(100%) rotate(45deg);
+    }
 }
 
 .game-menu-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 0 rgba(0,0,0,0.2);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
 }
 
 .game-menu-btn:active {
-    transform: translateY(3px);
+    transform: translateY(3px) scale(0.98);
     box-shadow: 0 3px 0 rgba(0,0,0,0.2);
 }
 
@@ -3094,4 +3838,76 @@ body {
     color: #999;
     font-size: 0.9rem;
     padding: 10px;
+}
+
+/* === 이름 수정 모달 === */
+.name-edit-content {
+    min-width: 280px;
+}
+
+.name-edit-photo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.name-edit-photo img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #667eea;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.name-edit-input-container {
+    margin-bottom: 20px;
+}
+
+#name-edit-input {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    text-align: center;
+    border: 3px solid #667eea;
+    border-radius: 15px;
+    color: #333;
+}
+
+#name-edit-input:focus {
+    outline: none;
+    border-color: #5a6fd6;
+}
+
+/* 점수판 이름 클릭 가능 */
+.score-name.clickable-name {
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 2px 5px;
+    border-radius: 8px;
+}
+
+.score-name.clickable-name:hover {
+    background: rgba(102, 126, 234, 0.2);
+}
+
+.score-name.clickable-name:active {
+    transform: scale(0.95);
+}
+
+/* 점수 클릭 가능 */
+.score-value.clickable {
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 2px 8px;
+    border-radius: 8px;
+}
+
+.score-value.clickable:hover {
+    background: rgba(17, 153, 142, 0.2);
+}
+
+.score-value.clickable:active {
+    transform: scale(0.95);
 }

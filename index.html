@@ -10,25 +10,113 @@
     <div id="app">
         <!-- 입구 화면 -->
         <div id="entry-screen" class="screen active">
+            <!-- SVG 배경 장식 -->
+            <svg class="entry-bg-svg" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice">
+                <defs>
+                    <radialGradient id="entryGlow1" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.6"/>
+                        <stop offset="100%" style="stop-color:#FFD700;stop-opacity:0"/>
+                    </radialGradient>
+                    <radialGradient id="entryGlow2" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:0.4"/>
+                        <stop offset="100%" style="stop-color:#FF6B6B;stop-opacity:0"/>
+                    </radialGradient>
+                    <radialGradient id="entryGlow3" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:0.4"/>
+                        <stop offset="100%" style="stop-color:#4ECDC4;stop-opacity:0"/>
+                    </radialGradient>
+                </defs>
+                <!-- 빛나는 원형 오로라 -->
+                <circle class="aurora-circle a1" cx="100" cy="150" r="80" fill="url(#entryGlow1)"/>
+                <circle class="aurora-circle a2" cx="320" cy="250" r="100" fill="url(#entryGlow2)"/>
+                <circle class="aurora-circle a3" cx="80" cy="500" r="90" fill="url(#entryGlow3)"/>
+                <circle class="aurora-circle a4" cx="350" cy="600" r="70" fill="url(#entryGlow1)"/>
+                <!-- 별 스파클 -->
+                <g class="sparkle-group">
+                    <circle class="sparkle sp1" cx="50" cy="100" r="3" fill="white"/>
+                    <circle class="sparkle sp2" cx="350" cy="150" r="2" fill="white"/>
+                    <circle class="sparkle sp3" cx="100" cy="350" r="3" fill="white"/>
+                    <circle class="sparkle sp4" cx="300" cy="450" r="2" fill="white"/>
+                    <circle class="sparkle sp5" cx="70" cy="600" r="3" fill="white"/>
+                    <circle class="sparkle sp6" cx="330" cy="700" r="2" fill="white"/>
+                </g>
+                <!-- 크리스마스 오너먼트 -->
+                <circle class="ornament red-ornament" cx="60" cy="80" r="18" fill="#c41e3a"/>
+                <rect class="ornament-cap" x="55" y="60" width="10" height="8" rx="2" fill="#FFD700"/>
+                <circle class="ornament green-ornament" cx="340" cy="120" r="15" fill="#2e8b57"/>
+                <rect class="ornament-cap" x="336" y="103" width="8" height="6" rx="2" fill="#FFD700"/>
+                <circle class="ornament gold-ornament" cx="50" cy="350" r="20" fill="#FFD700"/>
+                <rect class="ornament-cap" x="44" y="328" width="12" height="8" rx="2" fill="#c41e3a"/>
+                <circle class="ornament red-ornament" cx="360" cy="450" r="16" fill="#c41e3a"/>
+                <rect class="ornament-cap" x="355" y="432" width="10" height="7" rx="2" fill="#FFD700"/>
+                <!-- 지팡이 사탕 -->
+                <g class="candy-cane cc1" transform="translate(30, 200) rotate(-15)">
+                    <rect x="0" y="0" width="8" height="50" rx="4" fill="white"/>
+                    <rect x="0" y="0" width="8" height="10" fill="#c41e3a"/>
+                    <rect x="0" y="20" width="8" height="10" fill="#c41e3a"/>
+                    <rect x="0" y="40" width="8" height="10" fill="#c41e3a"/>
+                    <path d="M 4 0 Q 4 -15 20 -15" stroke="white" stroke-width="8" fill="none" stroke-linecap="round"/>
+                    <path d="M 4 0 Q 4 -15 20 -15" stroke="#c41e3a" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="10 10"/>
+                </g>
+                <g class="candy-cane cc2" transform="translate(360, 550) rotate(15)">
+                    <rect x="0" y="0" width="8" height="45" rx="4" fill="white"/>
+                    <rect x="0" y="0" width="8" height="9" fill="#2e8b57"/>
+                    <rect x="0" y="18" width="8" height="9" fill="#2e8b57"/>
+                    <rect x="0" y="36" width="8" height="9" fill="#2e8b57"/>
+                    <path d="M 4 0 Q 4 -12 18 -12" stroke="white" stroke-width="8" fill="none" stroke-linecap="round"/>
+                    <path d="M 4 0 Q 4 -12 18 -12" stroke="#2e8b57" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="9 9"/>
+                </g>
+                <!-- 별 장식 -->
+                <polygon class="tree-star" points="200,50 205,65 220,65 208,75 213,90 200,80 187,90 192,75 180,65 195,65" fill="#FFD700"/>
+            </svg>
             <div class="floating-decorations">
-                <span class="float-item" style="left: 5%; animation-delay: 0s;">🎈</span>
-                <span class="float-item" style="left: 15%; animation-delay: 0.5s;">🎪</span>
-                <span class="float-item" style="left: 75%; animation-delay: 1s;">🎨</span>
-                <span class="float-item" style="left: 85%; animation-delay: 1.5s;">🌈</span>
+                <span class="float-item" style="left: 5%; animation-delay: 0s;">🎄</span>
+                <span class="float-item" style="left: 15%; animation-delay: 0.5s;">🎅</span>
+                <span class="float-item" style="left: 75%; animation-delay: 1s;">🎁</span>
+                <span class="float-item" style="left: 85%; animation-delay: 1.5s;">⛄</span>
+            </div>
+            <!-- 크리스마스 전구 조명 -->
+            <div class="christmas-lights">
+                <span class="light red"></span>
+                <span class="light green"></span>
+                <span class="light gold"></span>
+                <span class="light blue"></span>
+                <span class="light red"></span>
+                <span class="light green"></span>
+                <span class="light gold"></span>
+                <span class="light blue"></span>
+                <span class="light red"></span>
+                <span class="light green"></span>
+            </div>
+            <!-- 눈 내리는 효과 -->
+            <div class="snowfall">
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❅</div>
+                <div class="snowflake">❆</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❅</div>
+                <div class="snowflake">❆</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❅</div>
+                <div class="snowflake">❆</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❅</div>
+                <div class="snowflake">❆</div>
             </div>
             <div class="logo-container">
-                <div class="logo-mascot">🦁</div>
-                <h1 class="logo">스피드 퀴즈!</h1>
+                <div class="logo-mascot">🎅</div>
+                <h1 class="logo">🎄 스피드 퀴즈! 🎄</h1>
                 <div class="stars">
                     <span class="star">⭐</span>
                     <span class="star">🌟</span>
                     <span class="star">⭐</span>
                 </div>
                 <div class="sub-mascots">
-                    <span>🐰</span>
-                    <span>🐻</span>
-                    <span>🐼</span>
+                    <span>🦌</span>
+                    <span>🎁</span>
+                    <span>⛄</span>
                 </div>
+                <div class="christmas-greeting">🎄 Merry Christmas! 🎄</div>
             </div>
 
             <button class="start-btn big-start-btn" onclick="startIntroduction()">
@@ -61,13 +149,83 @@
 
         <!-- 메인 허브 화면 -->
         <div id="main-hub-screen" class="screen">
+            <!-- SVG 배경 장식 -->
+            <svg class="hub-bg-svg" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice">
+                <defs>
+                    <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#FFD700"/>
+                        <stop offset="100%" style="stop-color:#FFA500"/>
+                    </linearGradient>
+                    <linearGradient id="circleGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:0.6"/>
+                        <stop offset="100%" style="stop-color:#FF8E53;stop-opacity:0.4"/>
+                    </linearGradient>
+                    <linearGradient id="circleGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:0.5"/>
+                        <stop offset="100%" style="stop-color:#44A08D;stop-opacity:0.3"/>
+                    </linearGradient>
+                    <linearGradient id="circleGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#A770EF;stop-opacity:0.5"/>
+                        <stop offset="100%" style="stop-color:#CF8BF3;stop-opacity:0.3"/>
+                    </linearGradient>
+                </defs>
+                <!-- 움직이는 원들 -->
+                <circle class="float-circle c1" cx="50" cy="100" r="30" fill="url(#circleGrad1)"/>
+                <circle class="float-circle c2" cx="350" cy="200" r="45" fill="url(#circleGrad2)"/>
+                <circle class="float-circle c3" cx="30" cy="400" r="25" fill="url(#circleGrad3)"/>
+                <circle class="float-circle c4" cx="380" cy="500" r="35" fill="url(#circleGrad1)"/>
+                <circle class="float-circle c5" cx="60" cy="650" r="40" fill="url(#circleGrad2)"/>
+                <!-- 별 모양들 -->
+                <polygon class="twinkle-star s1" points="100,50 103,60 113,60 105,67 108,77 100,71 92,77 95,67 87,60 97,60" fill="url(#starGrad)"/>
+                <polygon class="twinkle-star s2" points="320,120 323,130 333,130 325,137 328,147 320,141 312,147 315,137 307,130 317,130" fill="url(#starGrad)"/>
+                <polygon class="twinkle-star s3" points="380,350 383,360 393,360 385,367 388,377 380,371 372,377 375,367 367,360 377,360" fill="url(#starGrad)"/>
+                <polygon class="twinkle-star s4" points="20,550 23,560 33,560 25,567 28,577 20,571 12,577 15,567 7,560 17,560" fill="url(#starGrad)"/>
+                <!-- 삼각형 장식 -->
+                <polygon class="float-shape t1" points="370,80 385,110 355,110" fill="rgba(255,107,107,0.4)"/>
+                <polygon class="float-shape t2" points="20,300 35,330 5,330" fill="rgba(78,205,196,0.4)"/>
+                <polygon class="float-shape t3" points="390,600 405,630 375,630" fill="rgba(167,112,239,0.4)"/>
+                <!-- 작은 점들 (confetti) -->
+                <circle class="confetti" cx="80" cy="180" r="4" fill="#FF6B6B"/>
+                <circle class="confetti" cx="300" cy="80" r="3" fill="#4ECDC4"/>
+                <circle class="confetti" cx="350" cy="400" r="5" fill="#FFD93D"/>
+                <circle class="confetti" cx="50" cy="500" r="4" fill="#6BCB77"/>
+                <circle class="confetti" cx="320" cy="700" r="3" fill="#FF6B6B"/>
+                <circle class="confetti" cx="100" cy="750" r="5" fill="#4ECDC4"/>
+                <rect class="confetti" x="200" y="150" width="8" height="8" rx="2" fill="#A770EF" transform="rotate(45 204 154)"/>
+                <rect class="confetti" x="150" y="600" width="6" height="6" rx="1" fill="#FF8E53" transform="rotate(30 153 603)"/>
+            </svg>
+
+            <!-- 허브 크리스마스 전구 -->
+            <div class="christmas-lights">
+                <span class="light red"></span>
+                <span class="light green"></span>
+                <span class="light gold"></span>
+                <span class="light blue"></span>
+                <span class="light red"></span>
+                <span class="light green"></span>
+                <span class="light gold"></span>
+                <span class="light blue"></span>
+                <span class="light red"></span>
+                <span class="light green"></span>
+            </div>
+            <!-- 허브 눈 내리는 효과 -->
+            <div class="snowfall hub-snow">
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❅</div>
+                <div class="snowflake">❆</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❅</div>
+                <div class="snowflake">❆</div>
+                <div class="snowflake">❄</div>
+                <div class="snowflake">❅</div>
+            </div>
             <div class="hub-header">
                 <div class="hub-decorations">
-                    <span class="deco">🎈</span>
-                    <span class="deco">🎉</span>
-                    <span class="deco">⭐</span>
+                    <span class="deco">🎄</span>
+                    <span class="deco">🎅</span>
+                    <span class="deco">🎁</span>
                 </div>
-                <h2 class="hub-title">퀴즈 게임 🎮</h2>
+                <h2 class="hub-title">🎄 퀴즈 게임 🎄</h2>
             </div>
 
             <!-- 총점수판 -->
@@ -78,7 +236,7 @@
                 </div>
                 <div id="total-scoreboard-list" class="scoreboard-list">
                 </div>
-                <div class="score-edit-hint">💡 점수를 터치하면 수정할 수 있어요!</div>
+                <div class="score-edit-hint">💡 이름/점수를 터치하면 수정할 수 있어요!</div>
             </div>
 
             <!-- 게임 선택 메뉴 -->
@@ -255,6 +413,11 @@
                     <span class="score-label">점수</span>
                     <span id="score">0</span>
                 </div>
+            </div>
+
+            <!-- 타이머 진행 막대 -->
+            <div class="timer-bar-container" id="timer-bar-container">
+                <div class="timer-bar" id="timer-bar"></div>
             </div>
 
             <div class="question-container">
@@ -705,6 +868,23 @@
             <div class="modal-buttons">
                 <button class="modal-btn cancel-btn" onclick="hideScoreEdit()">취소</button>
                 <button class="modal-btn save-btn" onclick="saveScore()">저장 ✓</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 이름 수정 모달 -->
+    <div id="name-edit-modal" class="modal">
+        <div class="modal-content name-edit-content">
+            <h3>✏️ 닉네임 변경</h3>
+            <div class="name-edit-photo">
+                <img id="edit-name-photo" src="" alt="">
+            </div>
+            <div class="name-edit-input-container">
+                <input type="text" id="name-edit-input" value="" maxlength="10" placeholder="새 닉네임">
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel-btn" onclick="hideNameEdit()">취소</button>
+                <button class="modal-btn save-btn" onclick="saveName()">저장 ✓</button>
             </div>
         </div>
     </div>
